@@ -72,7 +72,6 @@ with left:
                  textcoords="offset points", fontsize=9)
     # Annotation explaining the well depth
 
-    ax1.set_ylim(U_min*2, U_min*2)
     ax1.set_xlabel("Distance r (nm)")                      # X-axis label
     ax1.set_ylabel("Potential energy U(r) (eV)")           # Y-axis label
     ax1.set_title("Lennard–Jones Potential")               # Plot title
