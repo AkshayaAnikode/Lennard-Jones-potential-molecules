@@ -51,6 +51,7 @@ left, right = st.columns(2, gap="large")  # Two side-by-side columns for plots
 with left:
     fig1, ax1 = plt.subplots(figsize=(6, 4))    # Create a Matplotlib figure and axes
     ax1.plot(r, U, label="LJ potential U(r)")   # Plot the LJ curve
+    ax1.set_ylim(U_min*2, -U_min*2)
     ax1.axhline(0, linewidth=1)                 # Horizontal line at U = 0 for reference
     ax1.plot([r_value], [U_r], "o")             # Mark the current (r, U(r)) point
     ax1.annotate(f"r = {r_value:.3f} nm\nU = {U_r:.4f} eV",
