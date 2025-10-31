@@ -1,4 +1,4 @@
-# app.py                                 # File name Streamlit looks for by default
+# app.py                                 
 
 import io                                 # For in-memory text buffer to build a CSV
 import numpy as np                        # Numerical arrays and math
@@ -8,39 +8,39 @@ import streamlit as st                    # Streamlit UI framework
 st.set_page_config(page_title="Lennard–Jones Visualizer", layout="wide")
 # Sets the browser tab title and makes the page use a wide layout
 
-st.title("Lennard–Jones (LJ) Potential — Interactive (no slider)")
-# Big header at top of the page
+st.title("Lennard–Jones (LJ) Potential — Interactive")
+# Header at top of the page
 
 st.caption("Type a distance r to see potential energy and a two-sphere schematic. Units: eV and nm.")
-# Small descriptive subtitle
+#descriptive subtitle
 
 # --- Inputs ---
 with st.sidebar:                          # Everything inside this block shows in the left sidebar
     st.header("Parameters")               # Sidebar section title
     st.write("Defaults approximate Neon.")# Small note to the user
     epsilon = st.number_input("ε (eV)", min_value=0.0001, value=0.0103, step=0.0001, format="%.4f")
-    # Numeric input for epsilon (well depth), returns a float
+    # Numeric input for epsilon (well depth/attraction strength)
 
     sigma   = st.number_input("σ (nm)", min_value=0.01,   value=0.2740, step=0.0010, format="%.3f")
-    # Numeric input for sigma (size parameter), returns a float
+    # Numeric input for sigma (size of molecule/distance where PE is 0)
 
     r_value = st.number_input("Distance r (nm)", min_value=0.001, value=0.350, step=0.001, format="%.3f")
-    # Numeric input for the current inter-particle distance r, returns a float
+    # Numeric input for distance r: distance between center of two molecules 
 
 # --- LJ function ---
-def lj_U(r, eps, sig):
-    r = np.asarray(r)                     # Ensure r is a NumPy array (works for scalars or arrays)
-    return 4 * eps * ((sig / r)**12 - (sig / r)**6)
-    # Lennard–Jones potential U(r) = 4ε[(σ/r)^12 − (σ/r)^6]
+def lj_U(r, eps, sig): #code defines function to compute PE
+    r = np.asarray(r)                   
+    return 4 * eps * ((sig / r)**12 - (sig / r)**6) #r^12 is repulsive force when molecules is too close & r^6 attractive vanderwal forces at longer distances
+    # Lennard–Jones potential U(r) = 4ε[(σ/r)^12 − (σ/r)^6] #U = PE
 
 # Derived reference points
-r_min = 2**(1/6) * sigma                  # Distance at which U(r) is minimum: r_min = 2^(1/6)σ
-U_min = -epsilon                          # Minimum potential value is −ε
+r_min = 2**(1/6) * sigma                  # Distance at which U(r) is minimum: r_min = 2^(1/6)σ / attractive and repuslive forces balanced - stable point
+U_min = -epsilon                          # Minimum potential value / energy at r min
 U_r   = lj_U(r_value, epsilon, sigma)     # Potential at the user-entered distance r_value
 
 # --- Curves domain (avoid r=0) ---
-r_lo = max(0.3 * sigma, 0.01)             # Left x-limit for the curve (avoid singularity near 0)
-r_hi = 4.0 * sigma                        # Right x-limit for the curve (far enough to show tail)
+r_lo = max(0.3 * sigma, 0.01)             # Left PE graph  
+r_hi = 4.0 * sigma                        # Right physical schematic spaced by r
 r = np.linspace(r_lo, r_hi, 1000)         # 1000 evenly spaced r values between r_lo and r_hi
 U = lj_U(r, epsilon, sigma)               # Compute U(r) on the whole grid for plotting
 
